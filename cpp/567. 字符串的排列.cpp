@@ -17,7 +17,7 @@ public:
                     valid++;
                 }
             }
-            while(left < right && right - left >= s1.length()) {
+            while(left < right && right - left == s1.length()) {
                 if(valid == need.size()) {
                     return true;
                 }
