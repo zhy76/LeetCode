@@ -7,44 +7,51 @@ public:
             this->id = id;
             this->dis = dis;
         }
+        friend bool operator < (State a, State b) {
+            return a.dis > b.dis;
+        }
+    };
+
+    struct cmp {
+        bool operator ()(State a, State b) {
+            return a.dis > b.dis;
+        }
     };
 
     int networkDelayTime(vector<vector<int>>& times, int n, int k) {
-        vector<vector<pair<int,int> > > graph(n+1, vector<pair<int,int>>());
+        vector<vector<State> > graph(n+1, vector<State>());
         for(auto edge: times) {
-            int from=edge[0], to=edge[1], w=edge[2];
-            graph[from].push_back({to, w});
+            int from = edge[0], to = edge[1], w = edge[2];
+            graph[from].push_back(State(to, w));
         }
         vector<bool> vis(n+1, false);
         vector<int> dis(n+1, INT_MAX);
-        priority_queue<State, vector<State>, function<bool(State, State)>> pq([](State a, State b){
-            return a.dis > b.dis;
-        });
+        priority_queue<State> pq;
         dis[k] = 0;
         pq.push(State(k, 0));
         while(!pq.empty()) {
             State cur = pq.top();
+            pq.pop();
             int curId = cur.id;
             int curDis = cur.dis;
-            pq.pop();
-            if(vis[curId]) {
-                continue;
-            }
+            if(vis[curId]) continue;
             vis[curId] = true;
             for(auto next: graph[curId]) {
-                if(next.second + curDis < dis[next.first]) {
-                    dis[next.first] = next.second + curDis;
-                    pq.push(State(next.first, dis[next.first]));
+                int nextId = next.id;
+                int nextDis = next.dis + curDis;
+                if(nextDis < dis[nextId]) {
+                    dis[nextId] = nextDis;
+                    pq.push(State(nextId, nextDis));
                 }
             }
         }
-        int ans = 0;
+        int res = 0;
         for(int i=1; i<=n; i++) {
             if(dis[i] == INT_MAX) {
                 return -1;
             }
-            ans = max(ans, dis[i]);
+            res=max(res, dis[i]);
         }
-        return ans;
+        return res;
     }
 };
