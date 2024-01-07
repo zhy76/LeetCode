@@ -14,10 +14,10 @@ public:
     int ans = INT_MIN;
     int dfs(TreeNode* root) {
         if(root == nullptr) return 0;
-        int left = dfs(root->left);
-        int right = dfs(root->right);
-        int res = max(root->val, max(root->val + left, root->val + right));
-        ans = max(ans, max(max(root->val+left+right,root->val),max(root->val + left, root->val + right)));
+        int left = max(dfs(root->left),0);
+        int right = max(dfs(root->right),0);
+        int res = max(root->val + left, root->val + right);
+        ans = max(ans, root->val + left + right);
         return res;
     }
     int maxPathSum(TreeNode* root) {
