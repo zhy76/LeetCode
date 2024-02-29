@@ -3,5 +3,8 @@
         "iostream": "cpp",
         "ostream": "cpp",
         "vector": "cpp"
+    },
+    "code-runner.executorMap": {
+        "cpp": "cd $dir && clang++ -std=c++11 -g $fileName -o ./$fileNameWithoutExt && ./$fileNameWithoutExt"
     }
 }
